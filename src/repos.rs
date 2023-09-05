@@ -25,7 +25,7 @@ pub struct ReposAPIResponse {
 pub struct Repo {
     pub name: String,
     pub private: bool,
-    pub updatestamp: String, // TODO: ISO Date
+    pub updatestamp: Option<String>, // TODO: ISO Date
     pub author: Author,
     pub language: Option<String>,
     pub branch: Option<String>,
