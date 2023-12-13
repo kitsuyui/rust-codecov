@@ -40,7 +40,7 @@ pub struct HeadCommit {
     pub ci_passed: Option<bool>,
     pub commitid: String,
     pub message: String,
-    pub parent: String,
+    pub parent: Option<String>,
     pub report: Report,
     pub state: String,
     pub timestamp: String, // TODO: ISO Date
@@ -203,5 +203,62 @@ mod tests {
             }
         });
         serde_json::from_value::<Report>(j).unwrap();
+    }
+
+    #[test]
+    fn test_deserialize_bug_regression() {
+        let j = json!({
+            "head_commit": {
+                "author": {
+                    "name": "renovate[bot]",
+                    "service": "github",
+                    "username": null
+                },
+                "branch": "main",
+                "ci_passed": true,
+                "commitid": "1eb341765e7c3daa88ae5d2a751538a620c6dbce",
+                "message": "chore(deps): update dependency @swc/core to v1.3.73",
+                "parent": null,
+                "report": {
+                    "files": [],
+                    "totals": {
+                        "branches": 22,
+                        "complexity": 0.0,
+                        "complexity_ratio": 0,
+                        "complexity_total": 0.0,
+                        "coverage": 86.05,
+                        "diff": 0,
+                        "files": 10,
+                        "hits": 148,
+                        "lines": 172,
+                        "messages": 0,
+                        "methods": 0,
+                        "misses": 23,
+                        "partials": 1,
+                        "sessions": 1
+                    }
+                },
+                "state": "complete",
+                "timestamp": "2023-08-01T15:41:47Z",
+                "totals": {
+                    "branches": 22,
+                    "complexity": 0.0,
+                    "complexity_ratio": 0,
+                    "complexity_total": 0.0,
+                    "coverage": 86.05,
+                    "diff": 0,
+                    "files": 10,
+                    "hits": 148,
+                    "lines": 172,
+                    "methods": 0,
+                    "misses": 23,
+                    "partials": 1,
+                    "sessions": 1
+                }
+            },
+            "name": "main",
+            "updatestamp": "2023-08-01T19:10:56.045522Z"
+        });
+        serde_json::from_value::<BranchDetailAPIResponse>(j).unwrap();
     }
 }
