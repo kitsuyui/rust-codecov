@@ -35,16 +35,23 @@ pub struct BranchNotFound {
  */
 #[derive(Serialize, Deserialize, Debug)]
 pub struct HeadCommit {
-    pub author: Author,
+    pub author: MayBeAuthor,
     pub branch: String,
     pub ci_passed: Option<bool>,
     pub commitid: String,
     pub message: String,
     pub parent: Option<String>,
     pub report: Report,
-    pub state: String,
-    pub timestamp: String, // TODO: ISO Date
+    pub state: Option<String>,
+    pub timestamp: Option<String>, // TODO: ISO Date
     pub totals: Totals,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(untagged)]
+pub enum MayBeAuthor {
+    Author(Author),
+    Empty(serde_json::Value),
 }
 
 /**
@@ -64,7 +71,8 @@ pub struct Author {
  */
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Report {
-    pub files: Vec<File>,
+    #[serde(default)]
+    pub files: Option<Vec<File>>,
     pub totals: Totals,
 }
 
@@ -94,7 +102,7 @@ impl BranchDetailAPISuccessResponse {
      * Returns the latest coverage for a branch.
      */
     pub fn latest_coverage(&self) -> f64 {
-        self.head_commit.totals.coverage
+        self.head_commit.totals.coverage.unwrap_or(0.0)
     }
 }
 
@@ -260,5 +268,55 @@ mod tests {
             "updatestamp": "2023-08-01T19:10:56.045522Z"
         });
         serde_json::from_value::<BranchDetailAPIResponse>(j).unwrap();
+    }
+
+    #[test]
+    fn test_nullability() {
+        let j = json!({
+            "head_commit": {
+                "author": {},
+                "branch": "",
+                "ci_passed": false,
+                "commitid": "",
+                "message": "",
+                "parent": "",
+                "report": {
+                    "totals": {
+                        "branches": null,
+                        "complexity": null,
+                        "complexity_total": null,
+                        "diff": null,
+                        "files": null,
+                        "hits": null,
+                        "lines": null,
+                        "messages": null,
+                        "methods": null,
+                        "misses": null,
+                        "partials": null,
+                        "sessions": null
+                    }
+                },
+                "state": null,
+                "timestamp": null,
+                "totals": {
+                    "branches": null,
+                    "complexity": null,
+                    "complexity_total": null,
+                    "files": null,
+                    "hits": null,
+                    "lines": null,
+                    "methods": null,
+                    "misses": null,
+                    "partials": null,
+                    "sessions": null
+                }
+            },
+            "name": "main",
+            "updatestamp": "2022-02-15T19:25:13.075533Z"
+        });
+        let response = serde_json::from_value::<BranchDetailAPIResponse>(j).unwrap();
+        if let BranchDetailAPIResponse::Success(branch_detail) = response {
+            assert_eq!(branch_detail.head_commit.parent, Some(String::from("")));
+        }
     }
 }

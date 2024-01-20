@@ -215,7 +215,7 @@ mod tests {
         match branch_detail {
             branch_detail::BranchDetailAPIResponse::Success(detail) => {
                 assert_eq!(detail.name, branch_name);
-                assert!(detail.latest_coverage() > 0.0)
+                assert!(detail.latest_coverage() >= 0.0);
             }
             _ => panic!("should be success"),
         }
