@@ -37,12 +37,12 @@ pub struct CommitAuthor {
 pub struct Commit {
     pub commitid: String,
     pub message: String,
-    pub timestamp: String, // TODO: ISO Date
+    pub timestamp: Option<String>, // TODO: ISO Date
     pub ci_passed: bool,
     pub author: CommitAuthor,
     pub branch: Option<String>,
     pub totals: Totals,
-    pub state: String,
+    pub state: Option<String>,
     pub parent: Option<String>,
 }
 
@@ -51,19 +51,21 @@ pub struct Commit {
  */
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Totals {
-    pub files: usize,
-    pub lines: usize,
-    pub hits: usize,
-    pub misses: usize,
-    pub partials: usize,
-    pub coverage: f64,
-    pub branches: usize,
-    pub methods: usize,
-    pub sessions: usize,
-    pub complexity: f64,
-    pub complexity_total: f64,
-    pub complexity_ratio: f64,
-    pub diff: usize,
+    pub files: Option<usize>,
+    pub lines: Option<usize>,
+    pub hits: Option<usize>,
+    pub misses: Option<usize>,
+    pub partials: Option<usize>,
+    #[serde(default)]
+    pub coverage: Option<f64>,
+    pub branches: Option<usize>,
+    pub methods: Option<usize>,
+    pub sessions: Option<usize>,
+    pub complexity: Option<f64>,
+    pub complexity_total: Option<f64>,
+    #[serde(default)]
+    pub complexity_ratio: Option<f64>,
+    pub diff: Option<usize>,
 }
 
 impl CommitsAPIResponse {
@@ -73,7 +75,7 @@ impl CommitsAPIResponse {
         }
         let mut total_coverage = 0.0;
         for commit in &self.results {
-            total_coverage += commit.totals.coverage;
+            total_coverage += commit.totals.coverage.unwrap_or(0.0);
         }
         Some(total_coverage / self.count as f64)
     }
@@ -95,7 +97,7 @@ mod tests {
         let commit = Commit {
             commitid: String::from("123"),
             message: String::from("message"),
-            timestamp: String::from("timestamp"),
+            timestamp: Some(String::from("timestamp")),
             ci_passed: true,
             author: CommitAuthor {
                 service: String::from("service"),
@@ -104,21 +106,21 @@ mod tests {
             },
             branch: Some(String::from("branch")),
             totals: Totals {
-                files: 1,
-                lines: 1,
-                hits: 1,
-                misses: 1,
-                partials: 1,
-                coverage: 2.0,
-                branches: 1,
-                methods: 1,
-                sessions: 1,
-                complexity: 1.0,
-                complexity_total: 1.0,
-                complexity_ratio: 1.0,
-                diff: 1,
+                files: Some(1),
+                lines: Some(1),
+                hits: Some(1),
+                misses: Some(1),
+                partials: Some(1),
+                coverage: Some(2.0),
+                branches: Some(1),
+                methods: Some(1),
+                sessions: Some(1),
+                complexity: Some(1.0),
+                complexity_total: Some(1.0),
+                complexity_ratio: Some(1.0),
+                diff: Some(1),
             },
-            state: String::from("state"),
+            state: Some(String::from("state")),
             parent: Some(String::from("parent")),
         };
         response.results.push(commit);

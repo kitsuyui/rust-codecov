@@ -5,19 +5,21 @@ use serde::{Deserialize, Serialize};
  */
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Totals {
-    pub files: usize,
-    pub lines: usize,
-    pub hits: usize,
-    pub misses: usize,
-    pub partials: usize,
-    pub coverage: f64,
-    pub branches: usize,
-    pub methods: usize,
-    pub sessions: usize,
-    pub complexity: f64,
-    pub complexity_total: f64,
-    pub complexity_ratio: f64,
-    pub diff: Diff,
+    pub files: Option<usize>,
+    pub lines: Option<usize>,
+    pub hits: Option<usize>,
+    pub misses: Option<usize>,
+    pub partials: Option<usize>,
+    #[serde(default)]
+    pub coverage: Option<f64>,
+    pub branches: Option<usize>,
+    pub methods: Option<usize>,
+    pub sessions: Option<usize>,
+    pub complexity: Option<f64>,
+    pub complexity_total: Option<f64>,
+    #[serde(default)]
+    pub complexity_ratio: Option<f64>,
+    pub diff: Option<Diff>,
 }
 
 /**
