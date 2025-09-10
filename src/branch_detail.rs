@@ -39,7 +39,7 @@ pub struct HeadCommit {
     pub branch: String,
     pub ci_passed: Option<bool>,
     pub commitid: String,
-    pub message: String,
+    pub message: Option<String>,
     pub parent: Option<String>,
     pub report: Report,
     pub state: Option<String>,
