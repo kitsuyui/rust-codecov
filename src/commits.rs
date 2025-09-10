@@ -36,10 +36,10 @@ pub struct CommitAuthor {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Commit {
     pub commitid: String,
-    pub message: String,
+    pub message: Option<String>,
     pub timestamp: Option<String>, // TODO: ISO Date
     pub ci_passed: bool,
-    pub author: CommitAuthor,
+    pub author: Option<CommitAuthor>,
     pub branch: Option<String>,
     pub totals: Totals,
     pub state: Option<String>,
@@ -96,14 +96,14 @@ mod tests {
         assert_eq!(response.coverage(), Some(0.0));
         let commit = Commit {
             commitid: String::from("123"),
-            message: String::from("message"),
+            message: Some(String::from("message")),
             timestamp: Some(String::from("timestamp")),
             ci_passed: true,
-            author: CommitAuthor {
+            author: Some(CommitAuthor {
                 service: String::from("service"),
                 username: String::from("username"),
                 name: Some(String::from("name")),
-            },
+            }),
             branch: Some(String::from("branch")),
             totals: Totals {
                 files: Some(1),
