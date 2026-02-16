@@ -1,7 +1,6 @@
 # rust-codecov
 
 [![Crates.io](https://img.shields.io/crates/d/codecov)](https://crates.io/crates/codecov)
-[![codecov](https://codecov.io/gh/kitsuyui/rust-codecov/branch/main/graph/badge.svg?token=0OM9KWFZQC)](https://codecov.io/gh/kitsuyui/rust-codecov)
 [![crates.io](https://img.shields.io/crates/v/codecov.svg)](https://crates.io/crates/codecov)
 [![docs.rs](https://docs.rs/codecov/badge.svg)](https://docs.rs/codecov)
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
@@ -10,6 +9,10 @@
 
 A thin wrapper for Codecov API (v2).
 https://docs.codecov.com/reference/overview
+
+## Archive
+
+This project is archived and no longer maintained because I no longer use Codecov.
 
 ## Usage
 
